@@ -1,21 +1,18 @@
 import java.util.HashMap;
 import java.util.Map;
 
-
 public class WordCount {
     public static void main(String[] args) {
         String document = "I am doing software engineering";
         Map<String, Integer> wordFrequency = getWordFrequency(document);
         int lineCount = getLineCount(document);
-        int characterCount = getCharacterCount(document);
-
+        int charCount = getCharCount(document);
         System.out.println("Word frequency:");
         for (Map.Entry<String, Integer> entry : wordFrequency.entrySet()) {
             System.out.println(entry.getKey() + ": " + entry.getValue());
         }
-
         System.out.println("Line count: " + lineCount);
-        System.out.println("Character count: " + characterCount);
+        System.out.println("Character count: " + charCount);
     }
 
     public static Map<String, Integer> getWordFrequency(String document) {
@@ -30,16 +27,11 @@ public class WordCount {
     }
 
     public static int getLineCount(String document) {
-        if (document.isEmpty()) {
-            return 0;
-        }
-        return document.split("\r\n|\r|\n").length;
+        String[] lines = document.split("\\r?\\n");
+        return lines.length;
     }
 
-    public static int getCharacterCount(String document) {
-        if (document.isEmpty()) {
-            return 0;
-        }
-        return document.replaceAll("\\s", "").length();
+    public static int getCharCount(String document) {
+        return document.length();
     }
 }
