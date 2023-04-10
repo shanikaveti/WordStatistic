@@ -3,7 +3,8 @@ import java.util.Map;
 
 public class WordCount {
     public static void main(String[] args) {
-        String document = "I am doing software engineering";
+        String document = args[0];
+//        String document = "I am doing software engineering";
         Map<String, Integer> wordFrequency = getWordFrequency(document);
         int lineCount = getLineCount(document);
         int charCount = getCharCount(document);
