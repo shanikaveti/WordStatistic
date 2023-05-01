@@ -1,168 +1,70 @@
 import org.junit.jupiter.api.Test;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.util.HashMap;
-import java.util.Map;
 
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class MainTest {
 
-    @Test
-    void getWordCount() {
-        String document = "this is software engineering project";
-        Map<String, Integer> expected = new HashMap<>();
-        expected.put("this", 1);
-        expected.put("is", 1);
-        expected.put("software", 1);
-        expected.put("engineering", 1);
-        expected.put("project", 1);
-        Map<String, Integer> actual = WordCount.getWordFrequency(document);
-        assertEquals(expected, actual);
-    }
-    @Test
-    public void testGetLineCount() {
-        String document = "I am doing software engineering\nThis is another line";
-        int expected = 2;
 
-        int result = WordCount.getLineCount(document);
-
-        assertEquals(expected, result);
-    }
 
     @Test
-    public void testGetCharCount() {
-        String document = "I am doing software engineering";
-        int expected = 31;
-
-        int result = WordCount.getCharCount(document);
-
+    public void testReplaceWordWithPartialMatch() {
+        String text = "The category is not important";
+        String patternWord = "cat";
+        String replacementWord = "dog";
+        String expected = "The category is not important";
+        String result = text.replaceAll("\\b" + patternWord + "\\b", replacementWord);
         assertEquals(expected, result);
     }
     @Test
-    void emptyStringTestCase() {
-        String document = "";
-        Map<String, Integer> expected = new HashMap<>();
-
-        Map<String, Integer> actual = WordCount.getWordFrequency(document);
-        assertEquals(expected, actual);
+    public void testReplaceSingleWord() {
+        // Test replacing a word with one occurrence
+        String text = "The quick brown fox jumps over the lazy dog.";
+        String pattern = "quick";
+        String replacement = "slow";
+        String expected = "The slow brown fox jumps over the lazy dog.";
+        assertEquals(expected, text.replaceAll("\\b" + pattern + "\\b", replacement));
+    }
+    @Test
+    public void testReplaceMultipleWord() {
+        String text = "I love to eat apples and apples are delicious.";
+        String pattern = "apples";
+        String replacement = "oranges";
+        String expected = "I love to eat oranges and oranges are delicious.";
+        assertEquals(expected, text.replaceAll("\\b" + pattern + "\\b", replacement));
+    }
+    @Test
+    public void testReplaceWordAsAPartOfAnotherWord() {
+        String text = "The carriage will depart from platform 9 3/4 at 11:00am.";
+        String pattern = "car";
+        String replacement = "bus";
+        String expected = "The carriage will depart from platform 9 3/4 at 11:00am.";
+        assertEquals(expected, text.replaceAll("\\b" + pattern + "\\b", replacement));
     }
 
     @Test
-    void singleStringTestCase() {
-        String document = "Software";
-        Map<String, Integer> expected = new HashMap<>();
-        expected.put("Software", 1);
-
-        Map<String, Integer> actual = WordCount.getWordFrequency(document);
-        assertEquals(expected, actual);
+    public void testReplaceEmptyString() {
+        String text = "I am happy";
+        String pattern = "happy";
+        String replacement = "";
+        String expected = "I am ";
+        assertEquals(expected, text.replaceAll("\\b" + pattern + "\\b", replacement));
     }
     @Test
-    void RepeatedWordCounter() {
-        String sentence = "the quick brown fox jumps over the lazy dog";
-        String[] words = sentence.split(" ");
-
-        Map<String, Integer> expectedCounts = new HashMap<>();
-        expectedCounts.put("the", 2);
-        expectedCounts.put("quick", 1);
-        expectedCounts.put("brown", 1);
-        expectedCounts.put("fox", 1);
-        expectedCounts.put("jumps", 1);
-        expectedCounts.put("over", 1);
-        expectedCounts.put("lazy", 1);
-        expectedCounts.put("dog", 1);
-
-        Map<String, Integer> actualCounts = new HashMap<>();
-        for (String word : words) {
-            if (actualCounts.containsKey(word)) {
-                int count = actualCounts.get(word);
-                actualCounts.put(word, count + 1);
-            } else {
-                actualCounts.put(word, 1);
-            }
-        }
-
-        assertEquals(expectedCounts, actualCounts);
+    public void testReplaceNonExistentWord() {
+        String text = "The sun is shining.";
+        String pattern = "rain";
+        String replacement = "snow";
+        String expected = "The sun is shining.";
+        assertEquals(expected, text.replaceAll("\\b" + pattern + "\\b", replacement));
     }
-    @Test
-    public void Separators() {
-        String sentence = "the-quick_brown,fox:jumps over the_lazy-dog";
-        String[] words = sentence.split("[\\W_]+");
-
-        Map<String, Integer> expectedCounts = new HashMap<>();
-        expectedCounts.put("the", 2);
-        expectedCounts.put("quick", 1);
-        expectedCounts.put("brown", 1);
-        expectedCounts.put("fox", 1);
-        expectedCounts.put("jumps", 1);
-        expectedCounts.put("over", 1);
-        expectedCounts.put("lazy", 1);
-        expectedCounts.put("dog", 1);
-
-        Map<String, Integer> actualCounts = new HashMap<>();
-        for (String word : words) {
-            if (actualCounts.containsKey(word)) {
-                int count = actualCounts.get(word);
-                actualCounts.put(word, count + 1);
-            } else {
-                actualCounts.put(word, 1);
-            }
-        }
-
-        assertEquals(expectedCounts, actualCounts);
-    }
-    @Test
-    public void VariablesAndNumerics() {
-        String sentence = "x = 5 + y; y = x * 2";
-        String[] words = sentence.split("\\W+");
-
-        Map<String, Integer> expectedCounts = new HashMap<>();
-        expectedCounts.put("x", 2);
-        expectedCounts.put("y", 2);
-        expectedCounts.put("5", 1);
-        expectedCounts.put("2", 1);
-
-        Map<String, Integer> actualCounts = new HashMap<>();
-        for (String word : words) {
-            if (actualCounts.containsKey(word)) {
-                int count = actualCounts.get(word);
-                actualCounts.put(word, count + 1);
-            } else {
-                actualCounts.put(word, 1);
-            }
-        }
-
-        assertEquals(expectedCounts, actualCounts);
-    }
-   
 
     @Test
-    void MultipleSpace() {
-        String sentence = "the quick    brown fox  jumps over the   lazy dog";
-        String[] words = sentence.split("\\s+");
-
-        Map<String, Integer> expectedCounts = new HashMap<>();
-        expectedCounts.put("the", 2);
-        expectedCounts.put("quick", 1);
-        expectedCounts.put("brown", 1);
-        expectedCounts.put("fox", 1);
-        expectedCounts.put("jumps", 1);
-        expectedCounts.put("over", 1);
-        expectedCounts.put("lazy", 1);
-        expectedCounts.put("dog", 1);
-
-        Map<String, Integer> actualCounts = new HashMap<>();
-        for (String word : words) {
-            if (actualCounts.containsKey(word)) {
-                int count = actualCounts.get(word);
-                actualCounts.put(word, count + 1);
-            } else {
-                actualCounts.put(word, 1);
-            }
-        }
-
-        assertEquals(expectedCounts, actualCounts);
+    public void testCapitalized() {
+        String text = "I like to eat apples and APPLES are delicious.";
+        String pattern = "apples";
+        String replacement = "oranges";
+        String expected = "I like to eat oranges and APPLES are delicious.";
+        assertEquals(expected, text.replaceAll("\\b" + pattern + "\\b", replacement));
     }
 }

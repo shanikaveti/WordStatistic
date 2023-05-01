@@ -1,38 +1,21 @@
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 public class WordCount {
     public static void main(String[] args) {
-        String document = args[0];
-//        String document = "I am doing software engineering";
-        Map<String, Integer> wordFrequency = getWordFrequency(document);
-        int lineCount = getLineCount(document);
-        int charCount = getCharCount(document);
-        System.out.println("Word frequency:");
-        for (Map.Entry<String, Integer> entry : wordFrequency.entrySet()) {
-            System.out.println(entry.getKey() + ": " + entry.getValue());
-        }
-        System.out.println("Line count: " + lineCount);
-        System.out.println("Character count: " + charCount);
-    }
+        Scanner scanner = new Scanner(System.in);
 
-    public static Map<String, Integer> getWordFrequency(String document) {
-        Map<String, Integer> frequency = new HashMap<>();
-        String[] words = document.split("[\\s\\t\\n]+");
-        for (String word : words) {
-            if (!word.isEmpty()) {
-                frequency.put(word, frequency.getOrDefault(word, 0) + 1);
-            }
-        }
-        return frequency;
-    }
+        System.out.println("Enter the text:");
+        String text = scanner.nextLine();
 
-    public static int getLineCount(String document) {
-        String[] lines = document.split("\\r?\\n");
-        return lines.length;
-    }
+        System.out.println("Enter the word to replace:");
+        String pattern = scanner.nextLine();
 
-    public static int getCharCount(String document) {
-        return document.length();
+        System.out.println("Enter the replacement word:");
+        String replacement = scanner.nextLine();
+
+        // Replace all occurrences of the pattern word with the replacement word
+        text = text.replaceAll("\\b" + pattern + "\\b", replacement);
+
+        System.out.println("New String: " + text);
     }
 }
